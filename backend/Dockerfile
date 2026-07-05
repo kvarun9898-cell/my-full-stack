@@ -20,26 +20,22 @@ WORKDIR /app/
 # Ref: https://docs.astral.sh/uv/guides/integration/docker/#using-the-environment
 ENV PATH="/app/.venv/bin:$PATH"
 
-# Install dependencies
-# Ref: https://docs.astral.sh/uv/guides/integration/docker/#intermediate-layers
-RUN --mount=type=cache,target=/root/.cache/uv \
-    --mount=type=bind,source=uv.lock,target=uv.lock \
-    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-    uv sync --frozen --no-install-workspace --package app
+COPY pyproject.toml uv.lock ./
 
-COPY ./backend/scripts /app/backend/scripts
+RUN uv sync --frozen --no-install-workspace --package app
 
-COPY ./backend/pyproject.toml ./backend/alembic.ini /app/backend/
+COPY backend/scripts ./backend/scripts
 
-COPY ./backend/app /app/backend/app
+COPY backend/pyproject.toml ./backend/
 
-# Sync the project
-# Ref: https://docs.astral.sh/uv/guides/integration/docker/#intermediate-layers
-RUN --mount=type=cache,target=/root/.cache/uv \
-    --mount=type=bind,source=uv.lock,target=uv.lock \
-    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-    uv sync --frozen --package app
+COPY backend/alembic.ini ./backend/
+
+COPY backend/app ./backend/app
+
+RUN uv sync --frozen --package app
 
 WORKDIR /app/backend/
+
+EXPOSE 8000
 
 CMD ["fastapi", "run", "--workers", "4"]
