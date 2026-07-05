@@ -27,10 +27,10 @@ jobs:
           # See: https://github.com/astral-sh/setup-uv/issues/851#issuecomment-4282017837
           version: "0.11.18"
       - run: docker compose down -v --remove-orphans
-      - name: Start services
-        run: docker compose up -d db backend
       - name: Create Docker network
         run: docker network create traefik-public || true
+      - name: Start services
+        run: docker compose up -d db backend
       - name: Migrate DB
         run: uv run bash scripts/prestart.sh
         working-directory: backend
