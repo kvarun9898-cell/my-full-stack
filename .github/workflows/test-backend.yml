@@ -31,9 +31,8 @@ jobs:
         run: docker network create traefik-public || true
       - name: Start services
         run: docker compose up -d db backend
-      - name: Migrate DB
-        run: uv run bash scripts/prestart.sh
-        working-directory: backend
+      - name: Run prestart
+        run: docker compose run --rm prestart
       - name: Run tests
         run: uv run bash scripts/tests-start.sh "Coverage for ${{ github.sha }}"
         working-directory: backend
