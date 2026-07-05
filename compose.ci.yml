@@ -1,0 +1,19 @@
+services:
+  backend:
+    networks:
+      - default
+
+  frontend:
+    networks:
+      - default
+
+  adminer:
+    networks:
+      - default
+
+  prestart:
+    networks:
+      - default
+
+networks:
+  default:
