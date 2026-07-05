@@ -29,8 +29,7 @@ jobs:
       - run: docker compose down -v --remove-orphans
       - name: Start services
         run: docker compose up -d db backend
-      - name: Create Docker network
-        run: docker network create traefik-public || true
+
       - name: Migrate DB
         run: uv run bash scripts/prestart.sh
         working-directory: backend
