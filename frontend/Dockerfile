@@ -3,11 +3,11 @@ FROM oven/bun:1 AS build-stage
 
 WORKDIR /app
 
-COPY package.json ./
+COPY frontend/package.json ./
 
 RUN bun install
 
-COPY . .
+COPY frontend/ .
 
 ARG VITE_API_URL
 
